@@ -6,13 +6,15 @@
     <title>File Explorer</title>
 </head>
 <body>
-    <h1>File Explorer</h1>
+    <h1>${currentPath}</h1>
     <p>Generated at: ${Time}</p>
-    <p>Current Directory: ${currentPath}</p>
+
 
     <c:if test="${not empty parentPath}">
-        <a href="explorer?path=${parentPath.replace('\\', '/')}">🗂 Вверх</a><br>
+        <a href="explorer?path=${parentPath.replace('\\', '/')}">🔙 Назад</a><br>
     </c:if>
+
+    <hr>
 
     <table>
         <thead>
