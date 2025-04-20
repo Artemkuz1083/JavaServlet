@@ -9,10 +9,16 @@
     <h1>${currentPath}</h1>
     <p>Generated at: ${Time}</p>
 
-
     <c:if test="${not empty parentPath}">
         <a href="explorer?path=${parentPath.replace('\\', '/')}">🔙 Назад</a><br>
     </c:if>
+
+    <hr>
+
+    <!-- Кнопка выхода -->
+    <form action="logout" method="post">
+        <button type="submit">Выход</button>
+    </form>
 
     <hr>
 
