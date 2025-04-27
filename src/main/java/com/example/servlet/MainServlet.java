@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 
 @WebServlet("/")
@@ -21,36 +23,47 @@ public class MainServlet extends HttpServlet {
         // получаем объект username
         String username = (String) session.getAttribute("username");
 
-        if(username == null){
+        if (username == null) {
             resp.sendRedirect("login.jsp");
             return;
         }
 
-        String userHome = "C:\\Users\\Artem\\IdeaProjects\\Spring\\ServletUsersFolder\\"+username;
+        Path userHome = Paths.get("C:\\Users\\Artem\\IdeaProjects\\Spring\\ServletUsersFolder\\" + username);
 
         String currentPath = req.getParameter("path");
 
+
+        Path requastedPath = null;
+
         if (currentPath == null || currentPath.isEmpty()) {
-            currentPath = userHome;
-            File dir = new File(currentPath);
-            if(!dir.exists())
-                dir.mkdirs();
-            currentPath = userHome; // Начальная директория
+            requastedPath = userHome;
+        } else {
+            try {
+                requastedPath = Paths.get(currentPath).toRealPath();
+                if (!requastedPath.startsWith(userHome)) {
+                    requastedPath = userHome;
+                }
+            } catch (IOException e) {
+                requastedPath = userHome;
+            }
         }
 
+        File directory = requastedPath.toFile();
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
 
-        FileEntities entities = new FileEntities(currentPath);
+        FileEntities entities = new FileEntities(requastedPath != null ? requastedPath.toString() : userHome.toString());
 
 
-        if (entities.parentPath() != null && entities.parentPath().startsWith(userHome)) {
+        if (entities.parentPath() != null && entities.parentPath().startsWith(userHome.toString())) {
             req.setAttribute("parentPath", entities.parentPath());
         } else {
             req.setAttribute("parentPath", null);
         }
 
-
         req.setAttribute("files", entities.getFiles());
-        req.setAttribute("currentPath", currentPath);
+        req.setAttribute("currentPath", requastedPath.toString());
         req.setAttribute("Time", new Date());
 
         req.getRequestDispatcher("mypage.jsp").forward(req, resp);
