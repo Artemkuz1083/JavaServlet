@@ -56,6 +56,7 @@ public class MainServlet extends HttpServlet {
         FileEntities entities = new FileEntities(requastedPath != null ? requastedPath.toString() : userHome.toString());
 
 
+
         if (entities.parentPath() != null && entities.parentPath().startsWith(userHome.toString())) {
             req.setAttribute("parentPath", entities.parentPath());
         } else {

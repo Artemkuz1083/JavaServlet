@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.util.Map;
 
 
 @WebServlet("/login")
@@ -18,7 +17,7 @@ public class LoginServlet extends HttpServlet{
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
-        if(UsersInfo.validateUser(username, password)){
+        if(Requests_sql.validateUser(username, password)){
             HttpSession session = req.getSession();
             session.setAttribute("username", username);
             resp.sendRedirect(req.getContextPath() + "/file-explorer");
